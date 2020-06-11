@@ -2,7 +2,6 @@ package com.access.controller;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +39,17 @@ public class GetEmployeeData implements SQLCommands {
 
 	@RequestMapping(value = "/employee/{enterpriseId}", method = RequestMethod.GET)
 	public String getEmployeeDataByEnterpriseId(@PathVariable String enterpriseId) throws JsonProcessingException {
-		
+
 		ErrorModel error = new ErrorModel();
 
 		if (StringUtils.isBlank(enterpriseId)) {
 			error.setError("EnterpriseId parameter cannot be null");
 			return utility.converJavaObjectToJsonString(error);
 		}
-		
-		List<EmployeeData> employeeDataList = jdbcTemplate.query(
-				selectFromEmployeeTable + "'" + enterpriseId + "'", new EmployeeDataRowMapper());
-		
+
+		List<EmployeeData> employeeDataList = jdbcTemplate.query(selectFromEmployeeTable + "'" + enterpriseId + "'",
+				new EmployeeDataRowMapper());
+
 		if (CollectionUtils.isEmpty(employeeDataList)) {
 			error.setError("ProjectEmployee table possibly empty or data not found");
 			return utility.converJavaObjectToJsonString(error);
@@ -58,7 +57,7 @@ public class GetEmployeeData implements SQLCommands {
 			return utility.converJavaObjectToJsonString(employeeDataList.get(0));
 		}
 	}
-	
+
 	@RequestMapping(value = "/contracts/{enterpriseId}", method = RequestMethod.GET)
 	public String getContractDataByEnterpriseId(@PathVariable String enterpriseId) throws JsonProcessingException {
 
@@ -100,11 +99,13 @@ public class GetEmployeeData implements SQLCommands {
 		return utility.converJavaObjectToJsonString(contractData.get(0));
 	}
 
-	@RequestMapping(value = "/forecast/{enterpriseId}", method = RequestMethod.GET)
-	public String getForecastDataByEnterpriseId(@PathVariable String enterpriseId) throws JsonProcessingException {
+	@RequestMapping(value = { "/forecast/{enterpriseId}/{financialYear}" }, method = RequestMethod.GET)
+	public String getForecastDataByEnterpriseId(@PathVariable String enterpriseId, @PathVariable String financialYear)
+			throws JsonProcessingException {
 
 		ForecastAndRollOffData rollOffData = new ForecastAndRollOffData();
 		ErrorModel error = new ErrorModel();
+		List<ForeCast2Data> foreCast2DataListbyDate = new ArrayList<ForeCast2Data>();
 
 		if (StringUtils.isBlank(enterpriseId)) {
 			error.setError("EnterpriseId parameter cannot be null");
@@ -146,12 +147,20 @@ public class GetEmployeeData implements SQLCommands {
 
 				try {
 					utility.modifyforeCast2DataList(foreCast2DataList);
-				} catch (ParseException e) {
 
-					e.printStackTrace();
+					if (StringUtils.isNotBlank(financialYear)) {
+						if (financialYear.equalsIgnoreCase("all")) {
+							rollOffData.setForecastData(foreCast2DataList);
+						} else {
+							foreCast2DataListbyDate = utility.modifyforeCast2DataListByYear(foreCast2DataList,
+									financialYear);
+							rollOffData.setForecastData(foreCast2DataListbyDate);
+						}
+					}
+				} catch (Exception e) {
+					error.setError(e.getMessage());
+					return utility.converJavaObjectToJsonString(error);
 				}
-
-				rollOffData.setForecastData(foreCast2DataList);
 
 			} else {
 				error.setError("Forecast table possibly empty or data not available");

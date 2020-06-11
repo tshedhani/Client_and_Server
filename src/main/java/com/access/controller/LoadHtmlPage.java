@@ -8,6 +8,6 @@ public class LoadHtmlPage {
 
 	@RequestMapping("/")
 	public String getHomePage() {
-		return "ajax2";
+		return "index";
 	}
 }

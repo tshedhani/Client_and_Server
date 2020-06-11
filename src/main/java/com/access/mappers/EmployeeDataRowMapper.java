@@ -17,11 +17,11 @@ public class EmployeeDataRowMapper implements RowMapper<com.access.models.Employ
 		
 		if (rs != null) {
 			employeeData.setSapID(rs.getString(1));
-			employeeData.setContractID(rs.getLong(2));
+			employeeData.setContractID(rs.getString(2));
 			employeeData.setEnterpriseID(rs.getString(3));
 			employeeData.setEmployeeName(rs.getString(4));
 			employeeData.setLevel(rs.getString(5));
-			employeeData.setAssignedCapacity(rs.getLong(6));
+			employeeData.setAssignedCapacity(rs.getString(6));
 			employeeData.setRollOnDate(StringUtils.isNotBlank(rs.getString(7)) ? rs.getString(7).substring(0, 10) : null);
 			employeeData.setRollOffDate(StringUtils.isNotBlank(rs.getString(8)) ? rs.getString(8).substring(0, 10) : null);
 			employeeData.setDeskAssigned(rs.getString(9));			

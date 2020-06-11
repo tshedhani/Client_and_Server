@@ -15,4 +15,6 @@ public interface SQLCommands {
 	
 	// Update Statements
 	String updateForecastTable = "UPDATE Forecast set Hours =";
+	String updateEmployeeTable = "UPDATE ProjectEmployee set";
+	String updateContractsTable = "UPDATE Contracts set";	
 }

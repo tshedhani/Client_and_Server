@@ -1,7 +1,11 @@
 package com.access.utils;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -48,6 +52,7 @@ public class Utilities {
 		Integer listSize = foreCast2DataList.size();
 
 		if (listSize > 11) {
+			Collections.sort(foreCast2DataList, new SortByDates());
 			return;
 		}
 
@@ -64,5 +69,26 @@ public class Utilities {
 		}
 
 		Collections.sort(foreCast2DataList, new SortByDates());
+	}
+
+	public List<ForeCast2Data> modifyforeCast2DataListByYear(List<ForeCast2Data> foreCast2DataList,
+			String financialYear) {
+
+		List<ForeCast2Data> forecastDataListByDate = new ArrayList<ForeCast2Data>();
+		for (ForeCast2Data foreCast2Data : foreCast2DataList) {
+			if (foreCast2Data.getDate().substring(2, foreCast2Data.getDate().length()).equals(financialYear)) {
+				forecastDataListByDate.add(foreCast2Data);
+			}
+		}
+		return forecastDataListByDate;
+	}
+
+	public Timestamp stringToTimestamp(String dateInString) throws ParseException {
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		date = formatter.parse(dateInString);
+		
+		return new Timestamp (date.getTime());
 	}
 }
