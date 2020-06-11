@@ -194,15 +194,15 @@ function search_ajax_submit() {
                     if (item.error != null) {
 
                          $('#result_error').html("<h4>" + item.error + "</h4>");
-                         document.getElementById('result_error').style.display = 'block';
+                         //document.getElementById('result_error').style.display = 'block';
                          //document.getElementById('result').style.display = 'none';
-                         document.getElementById('error').style.display = 'none';
+                         //document.getElementById('error').style.display = 'none';
                          alert(item.error);
 
                     } else {
                          refreshTable();
-                         document.getElementById('result_error').style.display = 'none';
-                         document.getElementById('error').style.display = 'none';
+                         //document.getElementById('result_error').style.display = 'none';
+                         //document.getElementById('error').style.display = 'none';
                          trHTML = "<tr id='titleForeCast'><th>EnterpriseID</th><th>Roll Off Date</th></tr>"
                               + "<tr id='forecastDB'><th>"
                               + item.enterpriseID
